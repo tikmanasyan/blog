@@ -55,13 +55,19 @@
             } else {
                 $_SESSION['msg'] = 'Account exists!';
                 header("location:http://blog.loc/views/auth/register.php");
-
             }
-
         }
 
         public function login($data) {
-
+            $email = $this->conn->real_escape_string($data['email']);
+            $password = $this->conn->real_escape_string($data['password']);
+            $sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `password` = '$password'";
+            $result = $this->conn->query($sql);
+            $user = $result->fetch_assoc();
+           if($user['is_verify'] == 1) {
+               $_SESSION['user'] = $user;
+               header("location:http://blog.loc/views/home.php");
+           }
         }
 
         public function verify_email($email) {
@@ -76,4 +82,3 @@
 
         }
     }
-

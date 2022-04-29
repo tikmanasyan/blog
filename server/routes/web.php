@@ -35,5 +35,13 @@
         }
 
     } else if($action === "login") {
-        echo "login";
+        if(isset($_POST['email']) && isset($_POST['password'])) {
+            $email = inp($_POST['email']);
+            $password = inp(hash_pass($_POST['password']));
+
+            $user->login([
+                'email' => $email,
+                'password' => $password
+            ]);
+        }
     }
