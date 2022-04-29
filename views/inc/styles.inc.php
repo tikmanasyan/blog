@@ -1,0 +1,1 @@
+<link rel="stylesheet" href="http://blog.loc/public/css/style.css">
