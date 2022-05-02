@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,6 +19,7 @@
                 echo "<p>" . $_SESSION['msg'] . "</p>";
                 unset( $_SESSION['msg']);
             }
+            echo $_SESSION['temp'];
             ?>
         </div>
         <form action="http://blog.loc/server/routes/web.php" method="post">

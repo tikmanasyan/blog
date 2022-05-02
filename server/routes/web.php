@@ -44,4 +44,7 @@
                 'password' => $password
             ]);
         }
+    } else if($action === "verify_email") {
+        $id = base64_decode($_GET['user_id']);
+        $user->verify_update($id);
     }

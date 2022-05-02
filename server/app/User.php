@@ -31,7 +31,7 @@
                      `role_id`, 
                      `is_verify`, 
                      `is_active`,
-                     `registred_at`
+                     `created_at`
                      ) VALUES (
                         '$name',
                         '$birth_date',
@@ -46,6 +46,10 @@
                 $result = $this->conn->query($sql);
                 if($result) {
                     $_SESSION['msg'] = 'Account has been created!';
+                    $this->verify_email([
+                        'name' => $name,
+                        'email' => $email
+                    ]);
                     header("location:http://blog.loc/views/auth/login.php");
                 } else {
                     $_SESSION['msg'] = 'Register failed!';
@@ -70,15 +74,39 @@
            }
         }
 
-        public function verify_email($email) {
-
+        public function verify_email($data) {
+            $name = $data['name'];
+            $email = $data['email'];
+            $sql = "SELECT * FROM `users` WHERE `email` = '$email'";
+            $result = $this->conn->query($sql);
+            $user = $result->fetch_assoc();
+            $user_id = base64_encode($user['id']);
+            $template = "";
+            $template .= "
+                <div>
+                    <h2>Hello dear {$name}</h2>
+                    <a href='http://blog.loc/server/routes/web.php?action=verify_email&user_id=$user_id'>Click To Verify</a>
+                </div>
+            ";
+            $headers = "";
+            $headers .= "Content-Type: text/html; charset=utf-8 \r\n";
+            $headers .= "From: Blog \r\n";
+            mail($email, "Verify account", $template, $headers);
         }
 
         public function verify_update($user_id) {
-
+            $sql = "UPDATE `users` SET `is_verify` = 1 WHERE `id` = $user_id";
+            $result = $this->conn->query($sql);
+            $_SESSION['msg'] = 'Account has been activated!';
+            header("location:http://blog.loc/views/auth/login.php");
         }
 
         public function logout() {
-
         }
     }
+
+    /*$user = new User();
+    $user->verify_email([
+        'name' => "John",
+        'email' => 'manasyan.tigran@mail.ru'
+    ]);*/
